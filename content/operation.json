@@ -1,0 +1,8 @@
+{
+    "取得裝置列表": "adb devices",
+    "取得wifi mac address": "adb shell \"ip addr show wlan0 | grep 'link/ether' | cut -d' ' -f6\"",
+    "取得ethernet mac address": "adb shell \"ip addr show eth0 | grep 'link/ether' | cut -d' ' -f6\"",
+    "取得裝置記憶體資訊": "adb shell cat /proc/meminfo",
+    "取得裝置應用程式記憶體使用資訊": "adb shell dumpsys meminfo",
+    "Scrcpy遠端桌面": "scrcpy"
+}
