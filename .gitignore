@@ -1,3 +1,4 @@
 content/device_info.json
 .gitignore
-test.py
+./test.py
+build_code.py

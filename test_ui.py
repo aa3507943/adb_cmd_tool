@@ -303,50 +303,54 @@ class App(tk.Tk):
         self.stop_event = threading.Event()
         self.screen_width = self.winfo_screenwidth()
         self.screen_height = self.winfo_screenheight()
-        self.geometry(f"{int(self.screen_width)//2}x{int(self.screen_height)//2}+{(self.screen_width)//4}+{(self.screen_height)//4}")
+        self.geometry(f"{int(self.screen_width)//2}x{int(self.screen_height//1.45)}+{(self.screen_width)//4}+{(self.screen_height)//6}")
         #定義字體
         self.default_font = ("Microsoft JhengHei", int(12*(self.screen_height/1080)))
         self.bold_font = ("Microsoft JhengHei", int(12*(self.screen_height/1080)), "bold")
         # 定義介面元素
+        self.checkbox_var = tk.BooleanVar()
+        self.check_box = ttk.Checkbutton(self, variable=self.checkbox_var, text="視窗置頂", command=self.topmost_window)
+        self.check_box.grid(row=0, column=5, padx=5, pady=5, sticky='ne')
+
         self.device_label = tk.Label(self, text="機種:", font=self.bold_font)
-        self.device_label.grid(row=0, column=0, padx=5, pady=5, sticky='e')
+        self.device_label.grid(row=1, column=0, padx=5, pady=5, sticky='e')
 
         self.device_combo = ttk.Combobox(self, values=self.adb_func.get_device_name(), font=self.default_font)
-        self.device_combo.grid(row=0, column=1, padx=5, pady=5, sticky='w')
+        self.device_combo.grid(row=1, column=1, padx=5, pady=5, sticky='w')
 
         self.wifi_ip_label = tk.Label(self, text="wifi ip:", font=self.bold_font)
-        self.wifi_ip_label.grid(row=0, column=2, padx=5, pady=5, sticky='e')
+        self.wifi_ip_label.grid(row=1, column=2, padx=5, pady=5, sticky='e')
 
         self.wifi_ip_var = tk.StringVar()
         self.wifi_ip_entry = tk.Entry(self, textvariable=self.wifi_ip_var, state='readonly', font=self.default_font)
-        self.wifi_ip_entry.grid(row=0, column=3, padx=5, pady=5, sticky='w')
+        self.wifi_ip_entry.grid(row=1, column=3, padx=5, pady=5, sticky='w')
 
         self.connect_button = tk.Button(self, text="連線", command=self.connect, font= self.bold_font)
-        self.connect_button.grid(row=0, column=4, padx=5, pady=5)
+        self.connect_button.grid(row=1, column=4, padx=5, pady=5)
 
         self.disconnect_button = tk.Button(self, text="斷線", command=self.disconnect, state='disabled', font= self.bold_font)
-        self.disconnect_button.grid(row=0, column=5, padx=5, pady=5)
+        self.disconnect_button.grid(row=1, column=5, padx=5, pady=5)
 
         self.action_label = tk.Label(self, text="操作:", font=self.bold_font)
-        self.action_label.grid(row=1, column=0, padx=5, pady=5, sticky='e')
+        self.action_label.grid(row=2, column=0, padx=5, pady=5, sticky='e')
 
-        self.action_combo = ttk.Combobox(self, state='disabled', width=25, values=self.adb_func.get_func_name(), font= self.default_font)
-        self.action_combo.grid(row=1, column=1, columnspan=2, padx=5, pady=5, sticky='w')
+        self.action_combo = ttk.Combobox(self, state='disabled', width=int(25*self.screen_width/1920), values=self.adb_func.get_func_name(), font= self.default_font)
+        self.action_combo.grid(row=2, column=1, columnspan=2, padx=5, pady=5, sticky='w')
 
         self.param_label = tk.Label(self, text="參數:", state='disabled', font=self.bold_font)
-        self.param_label.grid(row=1, column=2, padx=5, pady=5, sticky='e')
+        self.param_label.grid(row=2, column=2, padx=5, pady=5, sticky='e')
 
-        self.param_entry = tk.Entry(self, state='disabled', width=20, font= self.default_font)
-        self.param_entry.grid(row=1, column=3, padx=5, pady=5, sticky='w')
+        self.param_entry = tk.Entry(self, state='disabled', width=int(25*self.screen_width/1920), font= self.default_font)
+        self.param_entry.grid(row=2, column=3, padx=5, pady=5, sticky='w')
 
         self.execute_button = tk.Button(self, text="執行", command=self.execute, state='disabled', font= self.bold_font)
-        self.execute_button.grid(row=1, column=4, padx=5, pady=5)
+        self.execute_button.grid(row=2, column=4, padx=5, pady=5)
 
         self.terminal_button = tk.Button(self, text="中斷", state="disabled", command=self.terminal, font= self.bold_font)
-        self.terminal_button.grid(row=1, column=5, padx=5, pady=5)
+        self.terminal_button.grid(row=2, column=5, padx=5, pady=5)
 
         self.text_frame = tk.Frame(self)
-        self.text_frame.grid(row=2, column=0, columnspan=10, padx=5, pady=5, sticky="nsew")
+        self.text_frame.grid(row=3, column=0, columnspan=10, padx=5, pady=5, sticky="nsew")
         self.console_text = tk.Text(self.text_frame, bg="black", fg="white", wrap="word", font= ("Microsoft JhengHei", int(15*self.screen_height/1080)))
         self.console_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         self.scrollbar = ttk.Scrollbar(self.text_frame, orient=tk.VERTICAL, command=self.console_text.yview)
@@ -439,3 +443,9 @@ class App(tk.Tk):
             self.param_entry.config(state="disabled")
         if not self.connected:
             messagebox.showerror("錯誤", "請先連線")
+    
+    def topmost_window(self):
+        if self.checkbox_var.get():
+            self.wm_attributes("-topmost", 1)
+        else:
+            self.wm_attributes("-topmost", 0)
